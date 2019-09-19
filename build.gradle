@@ -1,0 +1,27 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.0.M6'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+
+group = 'com.WeasleyClock'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-cloud-connectors'
+	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
