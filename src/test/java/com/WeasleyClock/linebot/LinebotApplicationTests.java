@@ -1,4 +1,4 @@
-package com.WeasleyClock.linebot;
+package com.weasleyclock.linebot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

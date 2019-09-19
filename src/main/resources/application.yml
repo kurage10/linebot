@@ -1,9 +1,10 @@
-line.bot:
-  channel-token: 'Mt2a0CsRAk45dVlt/oDgyTk4n9BXmI6GnSOHsl8LwhkbJ8ZqYYNByuItdBAcejsjVpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMrS/9xIKVzghDVjVmtRlmF7ylMTfgAB/Rhe5p+8EhjiKgdB04t89/1O/w1cDnyilFU='
-  channel-secret: '60b575e030194965001ad93f5a18fe0c'
-  handler.path: /callback
-  
+line:
+  bot:
+    channel-token: 'Mt2a0CsRAk45dVlt/oDgyTk4n9BXmI6GnSOHsl8LwhkbJ8ZqYYNByuItdBAcejsjVpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMrS/9xIKVzghDVjVmtRlmF7ylMTfgAB/Rhe5p+8EhjiKgdB04t89/1O/w1cDnyilFU='
+    channel-secret: '60b575e030194965001ad93f5a18fe0c'
+    handler.path: /callback
+
 logging:
-    file: logs/myapp.log
-    level:
-        org.springframework.web: INFO
+  file: logs/myapp.log
+  level:
+    org.springframework.web: INFO
