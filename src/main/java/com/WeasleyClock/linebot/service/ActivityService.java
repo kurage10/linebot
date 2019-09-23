@@ -6,6 +6,7 @@ import java.util.List;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.PostbackAction;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.PostbackEvent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TemplateMessage;
@@ -15,6 +16,7 @@ import com.weasleyclock.linebot.code.BooleanTaskOptionCode;
 import com.weasleyclock.linebot.entity.ActivityDefinitionEntity;
 import com.weasleyclock.linebot.entity.ActivityInstanceEntity;
 import com.weasleyclock.linebot.exception.ActivityNotFoundException;
+import com.weasleyclock.linebot.exception.TaskNotFoundException;
 import com.weasleyclock.linebot.exception.WeasleyClockAppException;
 import com.weasleyclock.linebot.repository.ActivityInstanceRepository;
 
@@ -33,19 +35,28 @@ public class ActivityService {
 
     @Autowired
     private TaskExecService taskExecService;
-
-    public Message executeTask(MessageEvent<TextMessageContent> event) {
+    public Message startActivity(MessageEvent<TextMessageContent> event){
         String userId = event.getSource().getSenderId();
         LOGGER.info("[result]: " + userId);
+        
+        try {
+            createActivityInstance(event);
+        } catch (WeasleyClockAppException exception){
+            return new TextMessage(exception.getMessage()); 
+        }
+        // TODO ここはリプライメッセージを利用して出し分けられるようにしたい　。
+        return createDinnerConfirmMessage(); 
+        
+    }
+
+    public Message executeFollowingTask(PostbackEvent event) {
+        String userId = event.getSource().getSenderId();
         List<ActivityInstanceEntity> userActivity = activityInstanceRepository.selectInstanceByUserId(userId);
 
         Message message = null;
-        // TODO ここ、インスタンスを作る処理ができていない
         try {
             if (userActivity.isEmpty()) {
-                LOGGER.info("[start]: " + "start create instance");
-                userActivity = createActivityInstance(event);
-                return createDinnerConfirmMessage(); 
+                throw new TaskNotFoundException();                
             }
             LOGGER.info("[start]: " + "start return message");
             for (ActivityInstanceEntity instance : userActivity) {
@@ -58,7 +69,7 @@ public class ActivityService {
         return message;
     }
 
-    private List<ActivityInstanceEntity> createActivityInstance(MessageEvent<TextMessageContent>  event) throws ActivityNotFoundException{
+    private void createActivityInstance(MessageEvent<TextMessageContent>  event) throws ActivityNotFoundException{
         
         String activityName = event.getMessage().getText();
         String userId = event.getSource().getSenderId();
@@ -69,7 +80,6 @@ public class ActivityService {
         }
         activityInstanceRepository.insert(activityDef.getId(), userId);
 
-        return activityInstanceRepository.selectInstanceByUserId(userId);
         
     } 
      // TODO リファクタリング。なんか三つも同じようなメッセージ抱えてもしょうがない。
