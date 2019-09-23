@@ -1,6 +1,20 @@
+spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+#      database: mysql
+#      show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3307/linebotdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=JST&useSSL=false&connectRetries=60
+    username: linebot
+    password: P@ssw0rd
+    platform: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 line:
   bot:
-    channel-token: W69a21ar+l5KJeHgsCISqBJSUiEQMfc3zUFpydqZUTMlzqceKNhrswSBniMswD6ZVpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMrz4DX7JZFEjbJrStYF4S1W8Lr9kw9vDr6PR8u8YkHcdwdB04t89/1O/w1cDnyilFU=
+    channel-token: tniKvEujF02g/C/U8xoNxgHgmub7k/dLlDekpP3qeQ+k3ySIai8QKUIukz7PrxBoVpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMq9bHEbNgX9mpn1tYFnpAJOYvE0WMbnIXuqPDHIKpCBbAdB04t89/1O/w1cDnyilFU=
     channel-secret: 3046fe222fb8ad26c422375555a1230d
     handler.path: /callback
 
@@ -8,3 +22,10 @@ logging:
   file: logs/myapp.log
   level:
     org.springframework.web: INFO
+
+mybatis: 
+  type-aliases-package: com.weasleyclock.linebot.entity
+  #config-location: classpath:/mybatis-conf.xml
+  #check-config-location: true
+  configuration:
+    map-underscore-to-camel-case: true

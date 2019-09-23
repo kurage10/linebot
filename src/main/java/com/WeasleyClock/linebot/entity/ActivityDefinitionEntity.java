@@ -2,22 +2,25 @@ package com.weasleyclock.linebot.entity;
 
 import org.apache.ibatis.type.Alias;
 
-@Alias("UserEntity")
-public class UserEntity{
-    private String id;
+@Alias("ActivityDefinitionEntity")
+public class ActivityDefinitionEntity{
+    private int id;
     private String name;
 
+    public ActivityDefinitionEntity() {
+    }
 
-    public UserEntity(String id, String name) {
+    public ActivityDefinitionEntity(int id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public void setId(String id){
-        this.id = id;
-    }
-    public String getId () {
+    public int getId() {
         return this.id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -27,7 +30,6 @@ public class UserEntity{
     public void setName(String name) {
         this.name = name;
     }
-
 
 
     @Override

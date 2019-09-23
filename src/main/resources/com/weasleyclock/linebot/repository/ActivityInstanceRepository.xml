@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.weasleyclock.linebot.repository.ActivityInstanceRepository">
+
+
+
+	<select id="selectFollowingTasks" resultType="TaskEntity">
+		select * from TASK_DEFINITION where id in (
+            select task_id from ACTIVITY_TASK_RELATION 
+            where activity_id = #{activityId} and <![CDATA[task_num >= #{taskNum} ]]>
+        )
+	</select>
+    <select id="selectInstanceByUserId" parameterType="string" resultType="ActivityInstanceEntity">
+        select * from ACTIVITY_INSTANCE where user_id = #{userId} and is_active = true
+    </select>
+     <select id="selectDefinition" parameterType="string" resultType="ActivityDefinitionEntity">
+        select * from ACTIVITY_DEFINITION where name = #{name}
+    </select>
+    
+    <insert id="insert">
+	    insert into ACTIVITY_INSTANCE (activity_id, user_id, current_task_num) values (
+	    	#{activityId}, #{userId}, 1
+	    )
+	</insert>
+    
+    <update id="updateIsActiveById">
+	    update ACTIVITY_INSTANCE set is_active=#{isActive} where id=#{id}
+	</update>
+    
+    <update id="updateCurrentTaskById">
+	    update ACTIVITY_INSTANCE set current_task_num=#{nextTaskNum} where id=#{id}
+	</update>
+
+</mapper>
