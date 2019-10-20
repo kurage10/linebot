@@ -16,8 +16,8 @@
     </select>
     
     <insert id="insert">
-	    insert into ACTIVITY_INSTANCE (activity_id, user_id, is_active, current_task_num) values (
-	    	#{activityId}, #{userId}, true, 1
+	    insert into ACTIVITY_INSTANCE (activity_id, user_id, is_active, current_task_id) values (
+	    	#{activityId}, #{userId}, true, #{firstTask}
 	    )
 	</insert>
     
@@ -26,13 +26,13 @@
 	</update>
     
     <update id="updateCurrentTaskById">
-	    update ACTIVITY_INSTANCE set current_task_num=#{nextTaskNum} where id=#{id}
+	    update ACTIVITY_INSTANCE set current_task_id=#{nextTask} where id=#{id}
 	</update>
     
 	<select id="selectFollowingTasks" resultType="TaskEntity">
 		select * from TASK_DEFINITION where id in (
-            select task_id from ACTIVITY_TASK_RELATION 
-            where activity_id = #{activityId} and <![CDATA[task_num >= #{taskNum} ]]>
+            select next_task from ACTIVITY_TASK_RELATION 
+            where activity_id = #{activityId} and task_id = #{taskId} and branch_code = #{branchCode}
         )
 	</select>
 

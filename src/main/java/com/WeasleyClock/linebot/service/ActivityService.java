@@ -1,24 +1,17 @@
 package com.weasleyclock.linebot.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.linecorp.bot.model.action.Action;
-import com.linecorp.bot.model.action.PostbackAction;
-import com.linecorp.bot.model.event.MessageEvent;
-import com.linecorp.bot.model.event.PostbackEvent;
-import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.Message;
-import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
-import com.linecorp.bot.model.message.template.ButtonsTemplate;
-import com.weasleyclock.linebot.code.BooleanTaskOptionCode;
+import com.weasleyclock.linebot.code.TaskBranchCode;
 import com.weasleyclock.linebot.entity.ActivityDefinitionEntity;
 import com.weasleyclock.linebot.entity.ActivityInstanceEntity;
+import com.weasleyclock.linebot.entity.TaskEntity;
 import com.weasleyclock.linebot.exception.ActivityNotFoundException;
-import com.weasleyclock.linebot.exception.TaskNotFoundException;
 import com.weasleyclock.linebot.exception.WeasleyClockAppException;
 import com.weasleyclock.linebot.repository.ActivityInstanceRepository;
+import com.weasleyclock.linebot.task.TaskRequestDto;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,58 +28,53 @@ public class ActivityService {
 
     @Autowired
     private TaskExecService taskExecService;
-    public Message startActivity(MessageEvent<TextMessageContent> event){
-        String userId = event.getSource().getSenderId();
-        LOGGER.info("[result]: " + userId);
+    public <T> Message executeTaskInActivity(TaskRequestDto request){
+        // こいつはko
+        //String userId = event.getSource().getSenderId();
+        LOGGER.info("user: " + request.getUserId());
         
-        try {
-            createActivityInstance(event);
+        // 実行中のactivityInstanceを取得
+        try{
+            List<ActivityInstanceEntity> userActivities = activityInstanceRepository.selectInstanceByUserId(request.getUserId()); 
+            if(userActivities.isEmpty()){
+                LOGGER.info("create activity instance.");
+                int firstTask = createActivityInstance(request);
+                LOGGER.info("first task ID: " + firstTask);
+                return taskExecService.startTask(firstTask, request); 
+            } else {
+                // タスクの実行
+                LOGGER.info("execute task on an activity instance.");
+                ActivityInstanceEntity instance = userActivities.get(0);
+                int currentTaskId = instance.getCurrentTaskId();
+                TaskBranchCode branchCode= taskExecService.executeTask(currentTaskId, request); 
+                
+                // 次のタスクの更新
+                LOGGER.info("update next task - current: " + currentTaskId + " branch: " + branchCode.toString());
+                TaskEntity nextTask = activityInstanceRepository.selectFollowingTasks(instance.getActivityId(), currentTaskId, branchCode.toString());
+                
+                if(nextTask == null) {
+                    activityInstanceRepository.updateIsActiveById(instance.getId(), false);
+                    return new TextMessage("アクティビティが完了しました.");
+                }
+                
+                activityInstanceRepository.updateCurrentTaskById(instance.getId(), nextTask.getId());
+                return taskExecService.startTask(nextTask.getId(), request); 
+            }
         } catch (WeasleyClockAppException exception){
             return new TextMessage(exception.getMessage()); 
         }
-        // TODO ここはリプライメッセージを利用して出し分けられるようにしたい　。
-        return createDinnerConfirmMessage(); 
         
     }
 
-    public Message executeFollowingTask(PostbackEvent event) {
-        String userId = event.getSource().getSenderId();
-        List<ActivityInstanceEntity> userActivity = activityInstanceRepository.selectInstanceByUserId(userId);
-
-        Message message = null;
-        try {
-            if (userActivity.isEmpty()) {
-                throw new TaskNotFoundException();                
-            }
-            LOGGER.info("[start]: " + "start return message");
-            for (ActivityInstanceEntity instance : userActivity) {
-                message = taskExecService.executeNextTask(instance, event);
-            }
-        }
-        catch (WeasleyClockAppException exception) {
-            message = new TextMessage(exception.getMessage());
-        } 
-        return message;
-    }
-
-    private void createActivityInstance(MessageEvent<TextMessageContent>  event) throws ActivityNotFoundException{
+    private int createActivityInstance(TaskRequestDto request) throws ActivityNotFoundException{
         
-        String activityName = event.getMessage().getText();
-        String userId = event.getSource().getSenderId();
-
-        ActivityDefinitionEntity activityDef = activityInstanceRepository.selectDefinition(activityName);
+        ActivityDefinitionEntity activityDef = activityInstanceRepository.selectDefinition(request.getText());
         if(activityDef == null) {
             throw new ActivityNotFoundException(); 
         }
-        activityInstanceRepository.insert(activityDef.getId(), userId);
+        activityInstanceRepository.insert(activityDef.getId(), request.getUserId(), activityDef.getFirstTask());
 
-        
+        return activityDef.getFirstTask();
     } 
-     // TODO リファクタリング。なんか三つも同じようなメッセージ抱えてもしょうがない。
-     private static TemplateMessage createDinnerConfirmMessage(){
-        List<Action> actions = new ArrayList<>();
-        actions.add(new PostbackAction("yes", BooleanTaskOptionCode.USER_REPLY_YES.toString(), BooleanTaskOptionCode.USER_REPLY_YES.toString()));
-        actions.add(new PostbackAction("no", BooleanTaskOptionCode.USER_REPLY_NO.toString(), BooleanTaskOptionCode.USER_REPLY_NO.toString()));
-        return new TemplateMessage("夕飯の有無", new ButtonsTemplate(null, "夕飯の有無", "晩御飯は必要？", actions));
-    }
+  
 }

@@ -1,5 +1,5 @@
 package com.weasleyclock.linebot.code;
 
-public interface AppTaskOptionCode<T> {
+public interface TaskBranchCode<T> {
     public T getValue();
 }

@@ -14,7 +14,7 @@ spring:
 
 line:
   bot:
-    channel-token: tniKvEujF02g/C/U8xoNxgHgmub7k/dLlDekpP3qeQ+k3ySIai8QKUIukz7PrxBoVpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMq9bHEbNgX9mpn1tYFnpAJOYvE0WMbnIXuqPDHIKpCBbAdB04t89/1O/w1cDnyilFU=
+    channel-token: 1FwUyc+AeOBHz8H2Lv9aATDniWJ3bzRFv2LOwODqPWZroXfyvSIUbD4RO7XEYem7VpG8nMfArPeLTpzK/hqzI+2cK/xr2L7z8oYAU/vKoMrZSRwR0+3hXfFEJVLyyLligYcae0VCdm7dLIbxXuYMOAdB04t89/1O/w1cDnyilFU=
     channel-secret: 3046fe222fb8ad26c422375555a1230d
     handler.path: /callback
 

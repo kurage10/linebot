@@ -11,19 +11,19 @@ public class ActivityInstanceEntity{
     private boolean isActive;
     private int activityId;
     private String userId;
-    private int currentTaskNum;
+    private int currentTaskId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public ActivityInstanceEntity() {
     }
 
-    public ActivityInstanceEntity(int id, boolean isActive, int activityId, String userId, int currentTaskNum, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public ActivityInstanceEntity(int id, boolean isActive, int activityId, String userId, int currentTaskId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.isActive = isActive;
         this.activityId = activityId;
         this.userId = userId;
-        this.currentTaskNum = currentTaskNum;
+        this.currentTaskId = currentTaskId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -60,12 +60,12 @@ public class ActivityInstanceEntity{
         this.userId = userId;
     }
 
-    public int getCurrentTaskNum() {
-        return this.currentTaskNum;
+    public int getCurrentTaskId() {
+        return this.currentTaskId;
     }
 
-    public void setCurrentTaskNum(int currentTaskNum) {
-        this.currentTaskNum = currentTaskNum;
+    public void setCurrentTaskId(int currentTaskId) {
+        this.currentTaskId = currentTaskId;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -93,7 +93,7 @@ public class ActivityInstanceEntity{
             ", isActive='" + getIsActive() + "'" +
             ", activityId='" + getActivityId() + "'" +
             ", userId='" + getUserId() + "'" +
-            ", currentTaskNum='" + getCurrentTaskNum() + "'" +
+            ", currentTaskNum='" + getCurrentTaskId() + "'" +
             ", createdAt='" + getCreatedAt() + "'" +
             ", updatedAt='" + getUpdatedAt() + "'" +
             "}";

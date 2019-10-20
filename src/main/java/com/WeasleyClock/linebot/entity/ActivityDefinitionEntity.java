@@ -6,6 +6,7 @@ import org.apache.ibatis.type.Alias;
 public class ActivityDefinitionEntity{
     private int id;
     private String name;
+    private int firstTask;
 
     public ActivityDefinitionEntity() {
     }
@@ -29,6 +30,13 @@ public class ActivityDefinitionEntity{
 
     public void setName(String name) {
         this.name = name;
+    }
+    public int getFirstTask() {
+        return this.firstTask;
+    }
+
+    public void setFirstTask(int firstTask) {
+        this.firstTask = firstTask;
     }
 
 

@@ -4,17 +4,18 @@ public class ActivityTaskRelationEntity {
     private int id;
     private int activityId;
     private int taskId;
-    private int taskNum;
-
+    private int nextTask;
+    private String branchCode;
 
     public ActivityTaskRelationEntity() {
     }
 
-    public ActivityTaskRelationEntity(int id, int activityId, int taskId, int taskNum) {
+    public ActivityTaskRelationEntity(int id, int activityId, int taskId, int nextTask, String branchCode) {
         this.id = id;
         this.activityId = activityId;
         this.taskId = taskId;
-        this.taskNum = taskNum;
+        this.nextTask = nextTask;
+        this.branchCode = branchCode;
     }
 
     public int getId() {
@@ -41,34 +42,21 @@ public class ActivityTaskRelationEntity {
         this.taskId = taskId;
     }
 
-    public int getTaskNum() {
-        return this.taskNum;
+    public int getNextTask() {
+        return this.nextTask;
     }
 
-    public void setTaskNum(int taskNum) {
-        this.taskNum = taskNum;
+    public void setNextTask(int nextTask) {
+        this.nextTask = nextTask;
     }
 
-    public ActivityTaskRelationEntity id(int id) {
-        this.id = id;
-        return this;
+    public String getBranchCode() {
+        return this.branchCode;
     }
 
-    public ActivityTaskRelationEntity activityId(int activityId) {
-        this.activityId = activityId;
-        return this;
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
     }
-
-    public ActivityTaskRelationEntity taskId(int taskId) {
-        this.taskId = taskId;
-        return this;
-    }
-
-    public ActivityTaskRelationEntity taskNum(int taskNum) {
-        this.taskNum = taskNum;
-        return this;
-    }
-
 
     @Override
     public String toString() {
@@ -76,7 +64,7 @@ public class ActivityTaskRelationEntity {
             " id='" + getId() + "'" +
             ", activityId='" + getActivityId() + "'" +
             ", taskId='" + getTaskId() + "'" +
-            ", taskNum='" + getTaskNum() + "'" +
+            ", taskNum='" + getBranchCode() + "'" +
             "}";
     }
 

@@ -7,7 +7,10 @@ public class WeasleyClockAppException extends Exception{
 	public WeasleyClockAppException() {
 		super("WeasleyClockAppException");
 	}
-	WeasleyClockAppException(String msg) {
+	public WeasleyClockAppException(String msg) {
 		super(msg);
 	}
+	public WeasleyClockAppException(Throwable ex) {
+		super(ex);
+	} 
 }

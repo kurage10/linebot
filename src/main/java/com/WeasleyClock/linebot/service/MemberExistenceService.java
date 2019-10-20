@@ -23,11 +23,6 @@ public class MemberExistenceService {
         }
     }     
 
-    public TemplateMessage createDinnerConfirmMessage(){
-        List<Action> actions = new ArrayList<>();
-        actions.add(new PostbackAction("yes", "data-yes", "Yes"));
-        actions.add(new PostbackAction("no", "data-no", "No"));
-        return new TemplateMessage("alt message", new ButtonsTemplate(null, "夕飯の有無", "晩御飯は必要？", actions));
-    }
+    
 
 }

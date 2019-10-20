@@ -1,12 +1,12 @@
 package com.weasleyclock.linebot.code;
 
-public enum BooleanTaskOptionCode implements AppTaskOptionCode<Boolean> {
+public enum BooleanTaskBranchCode implements TaskBranchCode<Boolean> {
     USER_REPLY_YES(true), 
     USER_REPLY_NO(false);
 
     private Boolean value;
 
-    BooleanTaskOptionCode(Boolean value){
+    BooleanTaskBranchCode(Boolean value){
         this.value = value;
     }
 
