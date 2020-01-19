@@ -1,0 +1,35 @@
+spring:
+#  jpa:
+#    hibernate:
+#      ddl-auto: update
+#      database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+#      database: mysql
+#      show-sql: true
+  datasource:
+    url: jdbc:mysql://localhost:3307/linebotdb?zeroDateTimeBehavior=convertToNull&autoReconnect=true&useUnicode=true&characterEncoding=utf8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=JST&useSSL=false&connectRetries=60
+    username: linebot
+    password: xxxxxx 
+    platform: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver
+eureka:
+  client:
+    #register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+line:
+  bot:
+    channel-token: token
+    channel-secret: secret
+    handler.path: /callback
+
+logging:
+  file: logs/myapp.log
+  level:
+    org.springframework.web: INFO
+
+mybatis: 
+  type-aliases-package: com.weasleyclock.linebot.entity
+  #config-location: classpath:/mybatis-conf.xml
+  #check-config-location: true
+  configuration:
+    map-underscore-to-camel-case: true
