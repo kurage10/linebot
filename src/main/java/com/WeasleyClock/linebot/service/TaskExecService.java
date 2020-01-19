@@ -20,6 +20,7 @@ import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 
@@ -35,6 +36,9 @@ public class TaskExecService{
 
     @Autowired
     private TaskRepository taskRepository;
+
+    @Autowired
+    private ApplicationContext context;
     /*
     public Message startTask(Event event){
         String userId = event.getSource().getSenderId();
@@ -46,17 +50,14 @@ public class TaskExecService{
     //@Transactional(isolation = Isolation.READ_COMMITTED)
 
     public Message startTask(int taskId, TaskRequestDto request) throws WeasleyClockAppException {
-       Class<? extends BaseTask> taskClass = searchTaskClass(taskId); 
-       try{
-           Constructor<? extends BaseTask> constructor = taskClass.getConstructor();
-           BaseTask task = constructor.newInstance();
-           LOGGER.info(" create instance - task: " + task.getClass().toString());
- 
-           Message startMessage = task.start(request);
-           return startMessage; 
-       } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException ex) {
-           throw new WeasleyClockAppException(ex);
-       }
+        Class<? extends BaseTask> taskClass = searchTaskClass(taskId); 
+           //Constructor<? extends BaseTask> constructor = taskClass.getConstructor();
+           //BaseTask task = constructor.newInstance();
+        BaseTask task = context.getBean(taskClass);
+        LOGGER.info(" create instance - task: " + task.getClass().toString());
+
+        Message startMessage = task.start(request);
+        return startMessage; 
     }
     public TaskBranchCode executeTask(int taskId, TaskRequestDto request) throws WeasleyClockAppException {
        Class<? extends BaseTask> taskClass = searchTaskClass(taskId); 
@@ -82,7 +83,7 @@ public class TaskExecService{
             LinebotTask annotation = c.getAnnotation(LinebotTask.class);
             return taskEntity.getCode().equals(annotation.name()); 
         });
-
+        
         return allTask.stream().filter(checkTaskName).findFirst().get();
     } 
 

@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.0.M6'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id 'eclipse'
 }
 
 group = 'com.weasleyclock'
@@ -12,11 +13,33 @@ repositories {
 	mavenCentral()
 	maven { url 'https://repo.spring.io/milestone' }
 }
+ext['guava.version'] = '28.0-jre'
+ext['okhttp3.version'] = '3.14.2'
+ext['retrofit.version'] = '2.6.1'
+
+dependencyManagement {
+	imports {
+		mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Greenwich.SR2'
+	}
+	dependencies{
+		dependency 'com.squareup.okhttp3:logging-interceptor:' + ext['okhttp3.version']
+            dependency 'com.squareup.okhttp3:mockwebserver:' + ext['okhttp3.version']
+            dependencySet(group: 'com.squareup.retrofit2', version: ext['retrofit.version']) {
+                entry 'converter-jackson'
+                entry 'retrofit'
+            }
+	}
+}
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-cloud-connectors'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.1.0'
+	compile project (":grpc-disaster") 
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-eureka', version: '1.4.7.RELEASE'
+	implementation 'io.grpc:grpc-netty-shaded:1.24.0'
+	implementation 'io.grpc:grpc-protobuf:1.24.0'
+	implementation 'io.grpc:grpc-stub:1.24.0'
 	compile group: 'org.reflections', name: 'reflections', version: '0.9.10'
 	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.17'
 	compile group: 'com.linecorp.bot', name: 'line-bot-spring-boot', version: '3.0.0'

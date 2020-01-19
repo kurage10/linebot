@@ -25,6 +25,9 @@ public class ActivityService {
 
     @Autowired
     private ActivityInstanceRepository activityInstanceRepository;
+    @Autowired
+    private GrpcDisasterPreventionService service;
+
 
     @Autowired
     private TaskExecService taskExecService;
@@ -37,6 +40,7 @@ public class ActivityService {
         try{
             List<ActivityInstanceEntity> userActivities = activityInstanceRepository.selectInstanceByUserId(request.getUserId()); 
             if(userActivities.isEmpty()){
+                service.insertEquipment("kore", "de", "douda");
                 LOGGER.info("create activity instance.");
                 int firstTask = createActivityInstance(request);
                 LOGGER.info("first task ID: " + firstTask);

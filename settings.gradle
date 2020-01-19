@@ -11,4 +11,6 @@ pluginManagement {
 		}
 	}
 }
+include ':grpc-disaster'
+project(':grpc-disaster').projectDir = new File("/Users/etizenjellyfish/workspace/WeasleyClock/grpc-disaster")
 rootProject.name = 'linebot'
